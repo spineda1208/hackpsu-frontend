@@ -10,22 +10,16 @@ export default function Toolbar() {
       className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-full backdrop-blur-md bg-gray-200/60 border border-gray-300/40 shadow-lg"
     >
       <div className="flex items-center gap-6 text-sm font-medium text-black">
-        <a href="#" className="hover:text-gray-600 transition-colors">
+        <a href="#" className="hover:text-[#F75C69] transition-colors">
           Home
         </a>
-        <a href="#" className="hover:text-gray-600 transition-colors">
+        <a href="#" className="hover:text-[#F75C69] transition-colors">
           About
         </a>
-        <a href="#" className="hover:text-gray-600 transition-colors">
-          Events
+        <a href="/dashboard" className="hover:text-[#F75C69] transition-colors">
+          Dashboard
         </a>
-        <a href="#" className="hover:text-gray-600 transition-colors">
-          Sponsors
-        </a>
-        <a href="#" className="hover:text-gray-600 transition-colors">
-          FAQ
-        </a>
-        <a href="#" className="hover:text-gray-600 transition-colors">
+        <a href="#" className="hover:text-[#F75C69] transition-colors">
           Contact
         </a>
       </div>
