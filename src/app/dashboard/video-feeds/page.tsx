@@ -19,6 +19,7 @@ import {
   Circle,
 } from "lucide-react";
 import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 
 interface VideoFeed {
   id: string;
@@ -96,9 +97,10 @@ const mockFeeds: VideoFeed[] = [
   },
 ];
 
-function VideoFeedCard({ feed }: { feed: VideoFeed }) {
+function VideoFeedCard({ feed, index }: { feed: VideoFeed; index: number }) {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
 
   const statusColors = {
     live: "bg-green-500",
@@ -113,8 +115,22 @@ function VideoFeedCard({ feed }: { feed: VideoFeed }) {
   };
 
   return (
-    <Card className="overflow-hidden group">
-      <div className="relative aspect-video bg-muted">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        type: "spring",
+        bounce: 0.3,
+        duration: 0.5,
+        delay: index * 0.05,
+      }}
+    >
+      <Card 
+        className="overflow-hidden"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div className="relative aspect-video bg-muted">
         {/* Video Feed Placeholder */}
         <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800">
           <div className="text-center space-y-2">
@@ -135,8 +151,20 @@ function VideoFeedCard({ feed }: { feed: VideoFeed }) {
         </div>
 
         {/* Video Info Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-          <div className="flex items-center justify-between">
+        <AnimatePresence>
+          {isHovered && (
+            <motion.div
+              className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{
+                type: "spring",
+                bounce: 0.2,
+                duration: 0.3,
+              }}
+            >
+              <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Button
                 size="icon"
@@ -178,9 +206,10 @@ function VideoFeedCard({ feed }: { feed: VideoFeed }) {
               >
                 <MoreVertical className="h-4 w-4" />
               </Button>
-            </div>
-          </div>
-        </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <CardHeader className="pb-3">
@@ -193,6 +222,7 @@ function VideoFeedCard({ feed }: { feed: VideoFeed }) {
         </CardDescription>
       </CardHeader>
     </Card>
+    </motion.div>
   );
 }
 
@@ -213,7 +243,16 @@ export default function VideoFeedsPage() {
       </div>
 
       {/* Stats */}
-      <div className="flex gap-4">
+      <motion.div
+        className="flex gap-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          type: "spring",
+          bounce: 0.2,
+          duration: 0.4,
+        }}
+      >
         <Card className="flex-1">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
@@ -267,12 +306,12 @@ export default function VideoFeedsPage() {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </motion.div>
 
       {/* Video Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {mockFeeds.map((feed) => (
-          <VideoFeedCard key={feed.id} feed={feed} />
+        {mockFeeds.map((feed, index) => (
+          <VideoFeedCard key={feed.id} feed={feed} index={index} />
         ))}
       </div>
     </div>

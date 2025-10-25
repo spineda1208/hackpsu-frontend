@@ -15,6 +15,7 @@ import {
   Menu,
 } from "lucide-react";
 import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 
 interface NavItem {
   title: string;
@@ -55,17 +56,32 @@ export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div
-      className={cn(
-        "relative flex h-full flex-col border-r bg-background transition-all duration-300",
-        collapsed ? "w-16" : "w-64"
-      )}
+    <motion.div
+      className="relative flex h-full flex-col border-r bg-background"
+      animate={{
+        width: collapsed ? 64 : 256,
+      }}
+      transition={{
+        type: "spring",
+        bounce: 0.2,
+        duration: 0.4,
+      }}
     >
       {/* Header */}
       <div className="flex h-16 items-center justify-between px-4 border-b">
-        {!collapsed && (
-          <h2 className="text-lg font-semibold tracking-tight">HackPSU</h2>
-        )}
+        <AnimatePresence mode="wait">
+          {!collapsed && (
+            <motion.h2
+              className="text-lg font-semibold tracking-tight"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.2 }}
+            >
+              HackPSU
+            </motion.h2>
+          )}
+        </AnimatePresence>
         <Button
           variant="ghost"
           size="icon"
@@ -79,23 +95,45 @@ export function Sidebar() {
       {/* Navigation */}
       <ScrollArea className="flex-1 px-2 py-4">
         <nav className="flex flex-col gap-2">
-          {navItems.map((item) => {
+          {navItems.map((item, index) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
 
             return (
               <Link key={item.href} href={item.href}>
-                <Button
-                  variant={isActive ? "secondary" : "ghost"}
-                  className={cn(
-                    "w-full justify-start gap-3",
-                    collapsed && "justify-center px-2"
-                  )}
-                  title={collapsed ? item.title : undefined}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    type: "spring",
+                    bounce: 0.3,
+                    duration: 0.3,
+                    delay: index * 0.05,
+                  }}
                 >
-                  <Icon className="h-5 w-5 shrink-0" />
-                  {!collapsed && <span>{item.title}</span>}
-                </Button>
+                  <Button
+                    variant={isActive ? "secondary" : "ghost"}
+                    className={cn(
+                      "w-full justify-start gap-3",
+                      collapsed && "justify-center px-2"
+                    )}
+                    title={collapsed ? item.title : undefined}
+                  >
+                    <Icon className="h-5 w-5 shrink-0" />
+                    <AnimatePresence mode="wait">
+                      {!collapsed && (
+                        <motion.span
+                          initial={{ opacity: 0, width: 0 }}
+                          animate={{ opacity: 1, width: "auto" }}
+                          exit={{ opacity: 0, width: 0 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          {item.title}
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </Button>
+                </motion.div>
               </Link>
             );
           })}
@@ -106,19 +144,44 @@ export function Sidebar() {
 
       {/* Footer */}
       <div className="p-4">
-        {!collapsed ? (
-          <div className="rounded-lg bg-muted p-3">
-            <p className="text-xs font-medium">Need help?</p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Check our documentation
-            </p>
-          </div>
-        ) : (
-          <Button variant="ghost" size="icon" className="w-full">
-            <Settings className="h-4 w-4" />
-          </Button>
-        )}
+        <AnimatePresence mode="wait">
+          {!collapsed ? (
+            <motion.div
+              key="help-text"
+              className="rounded-lg bg-muted p-3"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{
+                type: "spring",
+                bounce: 0.2,
+                duration: 0.3,
+              }}
+            >
+              <p className="text-xs font-medium">Need help?</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Check our documentation
+              </p>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="help-icon"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{
+                type: "spring",
+                bounce: 0.2,
+                duration: 0.3,
+              }}
+            >
+              <Button variant="ghost" size="icon" className="w-full">
+                <Settings className="h-4 w-4" />
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    </div>
+    </motion.div>
   );
 }
