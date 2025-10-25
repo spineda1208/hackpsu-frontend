@@ -153,27 +153,23 @@ export function Sidebar() {
                     delay: index * 0.05,
                   }}
                 >
-                  <motion.div
-                    animate={{
-                      justifyContent: collapsed ? "center" : "flex-start",
-                    }}
-                    transition={{
-                      type: "spring",
-                      bounce: 0.2,
-                      duration: 0.4,
-                      delay: 0.1,
-                    }}
-                    style={{
-                      display: "flex",
-                    }}
+                  <Button
+                    variant={isActive ? "secondary" : "ghost"}
+                    className="w-full relative overflow-hidden"
+                    title={collapsed ? item.title : undefined}
                   >
-                    <Button
-                      variant={isActive ? "secondary" : "ghost"}
-                      className={cn(
-                        "w-full gap-3",
-                        collapsed && "px-2",
-                      )}
-                      title={collapsed ? item.title : undefined}
+                    <motion.div
+                      className="flex items-center gap-3"
+                      animate={{
+                        justifyContent: collapsed ? "center" : "flex-start",
+                        width: "100%",
+                      }}
+                      transition={{
+                        type: "spring",
+                        bounce: 0.2,
+                        duration: 0.4,
+                        delay: 0.1,
+                      }}
                     >
                       <Icon className="h-5 w-5 shrink-0" />
                       <AnimatePresence mode="wait">
@@ -188,8 +184,8 @@ export function Sidebar() {
                           </motion.span>
                         )}
                       </AnimatePresence>
-                    </Button>
-                  </motion.div>
+                    </motion.div>
+                  </Button>
                 </motion.div>
               </Link>
             );
