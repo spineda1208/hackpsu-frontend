@@ -11,23 +11,27 @@ interface FAQItem {
 const faqData: FAQItem[] = [
   {
     question: "What is Watchout?",
-    answer: "A surveillance awareness platform highlighting the disproportionate monitoring of underserved communities through interactive data visualization."
+    answer: "Watchout is an automated crime detection and alert system that leverages existing CCTV camera infrastructure, powered by advanced ML computer vision technology to detect suspicious activities in real-time and notify authorities instantly."
   },
   {
     question: "How does it work?",
-    answer: "We aggregate public CCTV data and present it through an interactive map interface, revealing patterns of surveillance density across different neighborhoods."
+    answer: "Our system integrates with existing CCTV cameras and uses machine learning algorithms to analyze video feeds in real-time. When suspicious behavior or criminal activity is detected, the system automatically generates alerts and notifies the appropriate authorities, reducing response time significantly."
   },
   {
-    question: "Is this legal?",
-    answer: "Yes. We only use publicly available information about surveillance cameras installed in public spaces. Our goal is transparency, not exploitation."
+    question: "What types of incidents can it detect?",
+    answer: "Our ML models are trained to identify various criminal activities including theft, vandalism, assault, unauthorized access, suspicious loitering, and other anomalous behaviors. The system continuously learns and improves its detection accuracy over time."
   },
   {
-    question: "Can I contribute?",
-    answer: "Absolutely. You can submit camera locations, report inaccuracies, or contribute to our open-source codebase on GitHub."
+    question: "Does it work with existing cameras?",
+    answer: "Yes! Watchout is designed to integrate seamlessly with your existing CCTV infrastructure. There's no need for expensive camera replacements—our software layer adds intelligent detection capabilities to cameras you already have installed."
   },
   {
-    question: "What's the goal?",
-    answer: "To raise awareness about surveillance inequality and spark conversations about privacy rights in the age of constant monitoring."
+    question: "How accurate is the detection?",
+    answer: "Our computer vision models achieve over 80% accuracy in controlled environments, with continuous improvements through machine learning. The system also includes confidence scoring to minimize false positives and allows for human verification of critical alerts."
+  },
+  {
+    question: "Who can benefit from this system?",
+    answer: "Law enforcement agencies, businesses, public facilities, campuses, parking structures, and residential communities can all benefit from Watchout's automated crime detection. Any organization with existing CCTV infrastructure looking to enhance security can leverage our platform."
   }
 ];
 

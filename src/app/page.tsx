@@ -51,7 +51,9 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <FAQ />
+      <div id="faq" className="w-full">
+        <FAQ />
+      </div>
 
       {/* Footer */}
       <Footer />
