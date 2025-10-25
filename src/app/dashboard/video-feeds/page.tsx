@@ -125,104 +125,104 @@ function VideoFeedCard({ feed, index }: { feed: VideoFeed; index: number }) {
         delay: index * 0.05,
       }}
     >
-      <Card 
+      <Card
         className="overflow-hidden"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <div className="relative aspect-video bg-muted">
-        {/* Video Feed Placeholder */}
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800">
-          <div className="text-center space-y-2">
-            <Circle className="h-12 w-12 mx-auto text-slate-600" />
-            <p className="text-sm text-slate-400">Video Feed {feed.id}</p>
+          {/* Video Feed Placeholder */}
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800">
+            <div className="text-center space-y-2">
+              <Circle className="h-12 w-12 mx-auto text-slate-600" />
+              <p className="text-sm text-slate-400">Video Feed {feed.id}</p>
+            </div>
           </div>
-        </div>
 
-        {/* Status Badge */}
-        <div className="absolute top-3 left-3 z-10">
-          <Badge
-            variant="secondary"
-            className={`${statusColors[feed.status]} text-white border-0`}
-          >
-            <Circle className="h-2 w-2 mr-1 fill-current" />
-            {statusLabels[feed.status]}
-          </Badge>
-        </div>
-
-        {/* Video Info Overlay */}
-        <AnimatePresence>
-          {isHovered && (
-            <motion.div
-              className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{
-                type: "spring",
-                bounce: 0.2,
-                duration: 0.3,
-              }}
+          {/* Status Badge */}
+          <div className="absolute top-3 left-3 z-10">
+            <Badge
+              variant="secondary"
+              className={`${statusColors[feed.status]} text-white border-0`}
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="h-8 w-8 text-white hover:bg-white/20"
-                    onClick={() => setIsPlaying(!isPlaying)}
-                  >
-                    {isPlaying ? (
-                      <Pause className="h-4 w-4" />
-                    ) : (
-                      <Play className="h-4 w-4" />
-                    )}
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="h-8 w-8 text-white hover:bg-white/20"
-                    onClick={() => setIsMuted(!isMuted)}
-                  >
-                    {isMuted ? (
-                      <VolumeX className="h-4 w-4" />
-                    ) : (
-                      <Volume2 className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="h-8 w-8 text-white hover:bg-white/20"
-                  >
-                    <Maximize2 className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="h-8 w-8 text-white hover:bg-white/20"
-                  >
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+              <Circle className="h-2 w-2 mr-1 fill-current" />
+              {statusLabels[feed.status]}
+            </Badge>
+          </div>
 
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base">{feed.name}</CardTitle>
-        <CardDescription className="flex items-center justify-between">
-          <span>{feed.location}</span>
-          <span className="text-xs">
-            {feed.resolution} • {feed.fps}fps
-          </span>
-        </CardDescription>
-      </CardHeader>
-    </Card>
+          {/* Video Info Overlay */}
+          <AnimatePresence>
+            {isHovered && (
+              <motion.div
+                className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{
+                  type: "spring",
+                  bounce: 0.2,
+                  duration: 0.3,
+                }}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-8 w-8 text-white hover:bg-white/20"
+                      onClick={() => setIsPlaying(!isPlaying)}
+                    >
+                      {isPlaying ? (
+                        <Pause className="h-4 w-4" />
+                      ) : (
+                        <Play className="h-4 w-4" />
+                      )}
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-8 w-8 text-white hover:bg-white/20"
+                      onClick={() => setIsMuted(!isMuted)}
+                    >
+                      {isMuted ? (
+                        <VolumeX className="h-4 w-4" />
+                      ) : (
+                        <Volume2 className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-8 w-8 text-white hover:bg-white/20"
+                    >
+                      <Maximize2 className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-8 w-8 text-white hover:bg-white/20"
+                    >
+                      <MoreVertical className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">{feed.name}</CardTitle>
+          <CardDescription className="flex items-center justify-between">
+            <span>{feed.location}</span>
+            <span className="text-xs">
+              {feed.resolution} • {feed.fps}fps
+            </span>
+          </CardDescription>
+        </CardHeader>
+      </Card>
     </motion.div>
   );
 }
