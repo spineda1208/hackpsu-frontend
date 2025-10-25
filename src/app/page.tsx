@@ -1,5 +1,6 @@
 import Navbar from "@/components/navbar";
 import Hero from "@/components/hero";
+import FAQ from "@/components/faq";
 
 export default function Home() {
   return (
@@ -49,31 +50,7 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="w-full bg-zinc-50 dark:bg-black py-20">
-        <div className="max-w-6xl mx-auto px-8">
-          <h2 className="text-4xl font-bold text-center mb-8 text-black dark:text-white">
-            FAQ
-          </h2>
-          <div className="max-w-3xl mx-auto space-y-6">
-            <div>
-              <h3 className="text-xl font-semibold mb-2 text-black dark:text-white">
-                Who can participate?
-              </h3>
-              <p className="text-zinc-600 dark:text-zinc-400">
-                All students are welcome to participate!
-              </p>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-2 text-black dark:text-white">
-                What should I bring?
-              </h3>
-              <p className="text-zinc-600 dark:text-zinc-400">
-                Bring your laptop, charger, and enthusiasm!
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <FAQ />
 
       {/* Footer */}
       <footer className="w-full bg-white dark:bg-zinc-950 py-12 border-t border-zinc-200 dark:border-zinc-800">
