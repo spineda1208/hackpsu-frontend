@@ -1,12 +1,19 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { useRef, useEffect, useState } from "react";
 import * as THREE from "three";
 
-function CctvModel({ meshRef }: { meshRef: React.RefObject<THREE.Group | null> }) {
+function CctvModel({ 
+  meshRef, 
+  isMobile 
+}: { 
+  meshRef: React.RefObject<THREE.Group | null>;
+  isMobile: boolean;
+}) {
   const { scene } = useGLTF("/cctv.glb");
+  const mobileTimeRef = useRef(0);
 
   // Convert model to wireframe mesh
   useEffect(() => {
@@ -19,6 +26,17 @@ function CctvModel({ meshRef }: { meshRef: React.RefObject<THREE.Group | null> }
       }
     });
   }, [scene]);
+
+  // Mobile auto-rotation animation
+  useFrame(() => {
+    if (isMobile && meshRef.current) {
+      mobileTimeRef.current += 0.016;
+      const time = mobileTimeRef.current * 0.8;
+      
+      meshRef.current.rotation.y = Math.PI / 2 + Math.sin(time) * 0.3;
+      meshRef.current.rotation.x = Math.cos(time * 0.7) * 0.2;
+    }
+  });
 
   return (
     <primitive 
@@ -33,13 +51,26 @@ function CctvModel({ meshRef }: { meshRef: React.RefObject<THREE.Group | null> }
 
 export default function Hero() {
   const [spotlight, setSpotlight] = useState({ x: 0, y: 0, visible: false });
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const meshRef = useRef<THREE.Group>(null);
 
+  // Detect mobile on mount
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Update CCTV rotation
-    if (meshRef.current && containerRef.current) {
+    // Update CCTV rotation (only on desktop)
+    if (!isMobile && meshRef.current && containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       const y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
@@ -76,7 +107,7 @@ export default function Hero() {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="w-full min-h-screen flex flex-col items-center justify-start px-8 pt-20"
+      className="w-full min-h-screen flex flex-col items-center justify-start px-8 pt-40 md:pt-20"
     >
       <div className="max-w-4xl w-full relative">
         {/* CCTV Model */}
@@ -84,7 +115,7 @@ export default function Hero() {
           <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
             <ambientLight intensity={0.5} />
             <directionalLight position={[10, 10, 5]} intensity={1} />
-            <CctvModel meshRef={meshRef} />
+            <CctvModel meshRef={meshRef} isMobile={isMobile} />
           </Canvas>
         </div>
 
