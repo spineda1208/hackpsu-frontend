@@ -35,7 +35,7 @@ function CctvModel({
     timeRef.current += 0.016;
     
     if (isMobile) {
-      const time = timeRef.current * 0.8;
+      const time = timeRef.current * 0.4;
       meshRef.current.rotation.y = Math.PI / 2 + Math.sin(time) * 0.3;
       meshRef.current.rotation.x = Math.cos(time * 0.7) * 0.2;
     } else {
