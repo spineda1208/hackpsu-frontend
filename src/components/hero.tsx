@@ -24,7 +24,8 @@ function CctvModel({ meshRef }: { meshRef: React.RefObject<THREE.Group | null> }
     <primitive 
       ref={meshRef} 
       object={scene} 
-      scale={1.0}
+      scale={1.25}
+      position={[0, 0.5, 0]}
       rotation={[0, Math.PI / 2, 0]}
     />
   );
@@ -75,11 +76,11 @@ export default function Hero() {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="w-full min-h-screen flex flex-col items-center justify-start px-8 pt-16"
+      className="w-full min-h-screen flex flex-col items-center justify-start px-8 pt-20"
     >
       <div className="max-w-4xl w-full relative">
         {/* CCTV Model */}
-        <div className="w-full h-[500px] relative">
+        <div className="w-full h-[350px] relative">
           <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
             <ambientLight intensity={0.5} />
             <directionalLight position={[10, 10, 5]} intensity={1} />
@@ -90,7 +91,7 @@ export default function Hero() {
         {/* Text with spotlight */}
         <div 
           ref={textRef}
-          className="relative mt-4 text-center"
+          className="relative mt-4 text-center pb-12 select-none cursor-default"
         >
           {/* Radial spotlight effect */}
           {spotlight.visible && (
