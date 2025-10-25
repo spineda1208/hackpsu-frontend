@@ -41,7 +41,6 @@ export default function Home() {
           </p>
         </div>
 
-        {/* ... rest of existing content ... */}
       </main>
     </div>
   );
