@@ -8,13 +8,15 @@ import { motion, AnimatePresence } from "motion/react";
 
 function CctvModel({ 
   meshRef, 
-  isMobile 
+  isMobile,
+  onRotationUpdate
 }: { 
   meshRef: React.RefObject<THREE.Group | null>;
   isMobile: boolean;
+  onRotationUpdate?: (normalizedX: number) => void;
 }) {
   const { scene } = useGLTF("/cctv.glb");
-  const mobileTimeRef = useRef(0);
+  const timeRef = useRef(0);
 
   // Convert model to wireframe mesh
   useEffect(() => {
@@ -28,14 +30,44 @@ function CctvModel({
     });
   }, [scene]);
 
-  // Mobile auto-rotation animation
+  // Auto-rotation animation
   useFrame(() => {
-    if (isMobile && meshRef.current) {
-      mobileTimeRef.current += 0.016;
-      const time = mobileTimeRef.current * 0.8;
+    if (meshRef.current) {
+      timeRef.current += 0.016;
       
-      meshRef.current.rotation.y = Math.PI / 2 + Math.sin(time) * 0.3;
-      meshRef.current.rotation.x = Math.cos(time * 0.7) * 0.2;
+      if (isMobile) {
+        // Mobile: gentle circular motion
+        const time = timeRef.current * 0.8;
+        meshRef.current.rotation.y = Math.PI / 2 + Math.sin(time) * 0.3;
+        meshRef.current.rotation.x = Math.cos(time * 0.7) * 0.2;
+      } else {
+        // Desktop: pendulum-like sweeping motion with pauses at edges
+        const speed = 0.35; // Overall animation speed
+        const time = timeRef.current * speed;
+        
+        // Use sine wave for smooth pendulum motion
+        // Sin naturally slows at peaks (edges) and speeds up in middle
+        const swing = Math.sin(time);
+        
+        // Add a slight pause at the edges using easing
+        // When near -1 or 1, the sine wave already slows naturally
+        const eased = swing * 0.5; // Scale to -0.5 to +0.5 range
+        
+        // Apply rotation
+        const y = Math.PI / 2 + eased;
+        // Consistent downward tilt throughout the motion
+        const x = 0.1;
+        
+        meshRef.current.rotation.y = y;
+        meshRef.current.rotation.x = x;
+        
+        // Notify parent of rotation for spotlight
+        if (onRotationUpdate) {
+          // Convert to normalized position (-1 to 1)
+          const normalizedX = swing;
+          onRotationUpdate(normalizedX);
+        }
+      }
     }
   });
 
@@ -84,19 +116,26 @@ export default function Hero() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Update CCTV rotation (only on desktop)
-    if (!isMobile && meshRef.current && containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      const y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-
-      meshRef.current.rotation.y = Math.PI / 2 + x * 0.5;
-      meshRef.current.rotation.x = y * 0.3;
+  const handleRotationUpdate = (normalizedX: number) => {
+    // Update spotlight based on CCTV rotation (desktop only)
+    if (!isMobile && textRef.current) {
+      const rect = textRef.current.getBoundingClientRect();
+      // Convert normalized position (-1 to 1) to pixel position
+      const x = rect.width / 2 + normalizedX * (rect.width / 2);
+      // Position vertically centered on the header text (upper third of container)
+      const y = rect.height * 0.3;
+      
+      setSpotlight({
+        x,
+        y,
+        visible: true,
+      });
     }
+  };
 
-    // Update spotlight for text
-    if (textRef.current) {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Update spotlight for text (mobile only - follows cursor)
+    if (isMobile && textRef.current) {
       const rect = textRef.current.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
@@ -115,7 +154,9 @@ export default function Hero() {
   };
 
   const handleMouseLeave = () => {
-    setSpotlight(prev => ({ ...prev, visible: false }));
+    if (isMobile) {
+      setSpotlight(prev => ({ ...prev, visible: false }));
+    }
   };
 
   const handleScrollClick = () => {
@@ -139,7 +180,11 @@ export default function Hero() {
           <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
             <ambientLight intensity={0.5} />
             <directionalLight position={[10, 10, 5]} intensity={1} />
-            <CctvModel meshRef={meshRef} isMobile={isMobile} />
+            <CctvModel 
+              meshRef={meshRef} 
+              isMobile={isMobile} 
+              onRotationUpdate={handleRotationUpdate}
+            />
           </Canvas>
         </div>
 
