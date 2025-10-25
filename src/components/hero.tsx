@@ -5,7 +5,7 @@ import { useGLTF } from "@react-three/drei";
 import { useRef, useEffect, useState } from "react";
 import * as THREE from "three";
 
-function CctvModel({ meshRef }: { meshRef: React.RefObject<THREE.Group> }) {
+function CctvModel({ meshRef }: { meshRef: React.RefObject<THREE.Group | null> }) {
   const { scene } = useGLTF("/cctv.glb");
 
   // Convert model to wireframe mesh
