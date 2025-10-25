@@ -165,47 +165,48 @@ function VideoFeedCard({ feed, index }: { feed: VideoFeed; index: number }) {
               }}
             >
               <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Button
-                size="icon"
-                variant="ghost"
-                className="h-8 w-8 text-white hover:bg-white/20"
-                onClick={() => setIsPlaying(!isPlaying)}
-              >
-                {isPlaying ? (
-                  <Pause className="h-4 w-4" />
-                ) : (
-                  <Play className="h-4 w-4" />
-                )}
-              </Button>
-              <Button
-                size="icon"
-                variant="ghost"
-                className="h-8 w-8 text-white hover:bg-white/20"
-                onClick={() => setIsMuted(!isMuted)}
-              >
-                {isMuted ? (
-                  <VolumeX className="h-4 w-4" />
-                ) : (
-                  <Volume2 className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                size="icon"
-                variant="ghost"
-                className="h-8 w-8 text-white hover:bg-white/20"
-              >
-                <Maximize2 className="h-4 w-4" />
-              </Button>
-              <Button
-                size="icon"
-                variant="ghost"
-                className="h-8 w-8 text-white hover:bg-white/20"
-              >
-                <MoreVertical className="h-4 w-4" />
-              </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-8 w-8 text-white hover:bg-white/20"
+                    onClick={() => setIsPlaying(!isPlaying)}
+                  >
+                    {isPlaying ? (
+                      <Pause className="h-4 w-4" />
+                    ) : (
+                      <Play className="h-4 w-4" />
+                    )}
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-8 w-8 text-white hover:bg-white/20"
+                    onClick={() => setIsMuted(!isMuted)}
+                  >
+                    {isMuted ? (
+                      <VolumeX className="h-4 w-4" />
+                    ) : (
+                      <Volume2 className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-8 w-8 text-white hover:bg-white/20"
+                  >
+                    <Maximize2 className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-8 w-8 text-white hover:bg-white/20"
+                  >
+                    <MoreVertical className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             </motion.div>
           )}
