@@ -69,7 +69,18 @@ export function Sidebar() {
       }}
     >
       {/* Header */}
-      <div className="flex h-16 items-center justify-between px-4 border-b">
+      <motion.div
+        className="flex h-16 items-center px-4 border-b"
+        animate={{
+          justifyContent: collapsed ? "center" : "space-between",
+        }}
+        transition={{
+          type: "spring",
+          bounce: 0.2,
+          duration: 0.4,
+          delay: 0.1,
+        }}
+      >
         <AnimatePresence mode="wait">
           {!collapsed && (
             <motion.h2
@@ -87,7 +98,7 @@ export function Sidebar() {
           variant="ghost"
           size="icon"
           onClick={() => setCollapsed(!collapsed)}
-          className={cn("h-9 w-9", collapsed && "mx-auto")}
+          className="h-9 w-9"
         >
           <AnimatePresence mode="wait" initial={false}>
             {collapsed ? (
@@ -121,7 +132,7 @@ export function Sidebar() {
             )}
           </AnimatePresence>
         </Button>
-      </div>
+      </motion.div>
 
       {/* Navigation */}
       <ScrollArea className="flex-1 px-2 py-4">
@@ -142,28 +153,43 @@ export function Sidebar() {
                     delay: index * 0.05,
                   }}
                 >
-                  <Button
-                    variant={isActive ? "secondary" : "ghost"}
-                    className={cn(
-                      "w-full justify-start gap-3",
-                      collapsed && "justify-center px-2",
-                    )}
-                    title={collapsed ? item.title : undefined}
+                  <motion.div
+                    animate={{
+                      justifyContent: collapsed ? "center" : "flex-start",
+                    }}
+                    transition={{
+                      type: "spring",
+                      bounce: 0.2,
+                      duration: 0.4,
+                      delay: 0.1,
+                    }}
+                    style={{
+                      display: "flex",
+                    }}
                   >
-                    <Icon className="h-5 w-5 shrink-0" />
-                    <AnimatePresence mode="wait">
-                      {!collapsed && (
-                        <motion.span
-                          initial={{ opacity: 0, width: 0 }}
-                          animate={{ opacity: 1, width: "auto" }}
-                          exit={{ opacity: 0, width: 0 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          {item.title}
-                        </motion.span>
+                    <Button
+                      variant={isActive ? "secondary" : "ghost"}
+                      className={cn(
+                        "w-full gap-3",
+                        collapsed && "px-2",
                       )}
-                    </AnimatePresence>
-                  </Button>
+                      title={collapsed ? item.title : undefined}
+                    >
+                      <Icon className="h-5 w-5 shrink-0" />
+                      <AnimatePresence mode="wait">
+                        {!collapsed && (
+                          <motion.span
+                            initial={{ opacity: 0, width: 0 }}
+                            animate={{ opacity: 1, width: "auto" }}
+                            exit={{ opacity: 0, width: 0 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            {item.title}
+                          </motion.span>
+                        )}
+                      </AnimatePresence>
+                    </Button>
+                  </motion.div>
                 </motion.div>
               </Link>
             );
