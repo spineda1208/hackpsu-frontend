@@ -1,6 +1,7 @@
 import Navbar from "@/components/navbar";
 import Hero from "@/components/hero";
 import FAQ from "@/components/faq";
+import Footer from "@/components/footer";
 
 export default function Home() {
   return (
@@ -53,13 +54,7 @@ export default function Home() {
       <FAQ />
 
       {/* Footer */}
-      <footer className="w-full bg-white dark:bg-zinc-950 py-12 border-t border-zinc-200 dark:border-zinc-800">
-        <div className="max-w-6xl mx-auto px-8 text-center">
-          <p className="text-zinc-600 dark:text-zinc-400">
-            © 2025 HackPSU. All rights reserved.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
