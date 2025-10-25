@@ -12,7 +12,8 @@ import {
   Settings,
   Users,
   BarChart3,
-  Menu,
+  PanelLeft,
+  PanelLeftClose,
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
@@ -88,7 +89,37 @@ export function Sidebar() {
           onClick={() => setCollapsed(!collapsed)}
           className={cn("h-9 w-9", collapsed && "mx-auto")}
         >
-          <Menu className="h-4 w-4" />
+          <AnimatePresence mode="wait" initial={false}>
+            {collapsed ? (
+              <motion.div
+                key="panel-left"
+                initial={{ opacity: 0, rotate: -90, scale: 0.8 }}
+                animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                exit={{ opacity: 0, rotate: 90, scale: 0.8 }}
+                transition={{
+                  type: "spring",
+                  bounce: 0.3,
+                  duration: 0.3,
+                }}
+              >
+                <PanelLeft className="h-4 w-4" />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="panel-left-close"
+                initial={{ opacity: 0, rotate: -90, scale: 0.8 }}
+                animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                exit={{ opacity: 0, rotate: 90, scale: 0.8 }}
+                transition={{
+                  type: "spring",
+                  bounce: 0.3,
+                  duration: 0.3,
+                }}
+              >
+                <PanelLeftClose className="h-4 w-4" />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </Button>
       </div>
 
@@ -115,7 +146,7 @@ export function Sidebar() {
                     variant={isActive ? "secondary" : "ghost"}
                     className={cn(
                       "w-full justify-start gap-3",
-                      collapsed && "justify-center px-2"
+                      collapsed && "justify-center px-2",
                     )}
                     title={collapsed ? item.title : undefined}
                   >
