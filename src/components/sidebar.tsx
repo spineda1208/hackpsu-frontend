@@ -18,7 +18,6 @@ import {
   Settings,
   PanelLeft,
   PanelLeftClose,
-  LogOut,
   Home,
 } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -296,7 +295,6 @@ export function Sidebar() {
                     onClick={handleLogout}
                     className="text-[#F75C69] focus:text-[#F75C69] focus:bg-zinc-100 dark:focus:bg-zinc-800 cursor-pointer justify-center"
                   >
-                    <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -330,7 +328,6 @@ export function Sidebar() {
                     onClick={handleLogout}
                     className="text-[#F75C69] focus:text-[#F75C69] focus:bg-zinc-100 dark:focus:bg-zinc-800 cursor-pointer justify-center"
                   >
-                    <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>

@@ -236,7 +236,7 @@ export default function SettingsPage() {
               <div className={`flex items-center justify-between py-4 px-6 ${!alertsEnabled ? "opacity-50" : ""}`}>
                 <div className="flex-1">
                   <h3 className="text-sm font-bold text-black dark:text-white mb-1">
-                    Email alerts
+                    Email Alerts
                   </h3>
                   <p className="text-sm text-zinc-600 dark:text-zinc-400">
                     Receive alerts via email
@@ -263,10 +263,10 @@ export default function SettingsPage() {
               <div className={`flex items-center justify-between py-4 px-6 pb-6 ${!alertsEnabled ? "opacity-50" : ""}`}>
                 <div className="flex-1">
                   <h3 className="text-sm font-bold text-black dark:text-white mb-1">
-                    Security alerts
+                    SMS Alerts
                   </h3>
                   <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Important security updates
+                    Receive alerts via SMS
                   </p>
                 </div>
                 <button
