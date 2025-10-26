@@ -179,7 +179,7 @@ export default function SettingsPage() {
             {/* Email - Clickable */}
             <button
               onClick={handleOpenEmailDialog}
-              className="w-full flex items-center justify-between py-4 px-6 text-left cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors last:rounded-b-lg"
+              className="w-full flex items-center justify-between py-4 px-6 pb-6 text-left cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors last:rounded-b-lg"
             >
               <h3 className="text-sm font-bold text-black dark:text-white">
                 Email
@@ -260,7 +260,7 @@ export default function SettingsPage() {
               </div>
 
               {/* Security Alerts */}
-              <div className={`flex items-center justify-between py-4 px-6 ${!alertsEnabled ? "opacity-50" : ""}`}>
+              <div className={`flex items-center justify-between py-4 px-6 pb-6 ${!alertsEnabled ? "opacity-50" : ""}`}>
                 <div className="flex-1">
                   <h3 className="text-sm font-bold text-black dark:text-white mb-1">
                     Security alerts
