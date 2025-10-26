@@ -51,7 +51,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950 p-8">
-      <div className="max-w-6xl mx-auto flex flex-col justify-center md:grid md:grid-cols-2 gap-4 md:gap-8 min-h-[calc(100vh-4rem)]">
+      <div className="max-w-6xl mx-auto flex flex-col justify-between md:justify-center md:grid md:grid-cols-2 gap-4 md:gap-8 min-h-[calc(100vh-4rem)]">
         {/* Left Column - Branding */}
         <div className="flex flex-col justify-center items-center md:border-r border-zinc-300 dark:border-zinc-700 md:pr-8 order-2 md:order-1">
           <div className="text-center">
@@ -65,7 +65,7 @@ export default function LoginPage() {
         </div>
 
         {/* Right Column - Sign In */}
-        <div className="flex flex-col justify-center items-center order-1 md:order-2">
+        <div className="flex flex-col flex-1 justify-center items-center order-1 md:order-2 md:flex-initial">
           <div className="w-full max-w-md">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-black dark:text-white mb-2">
