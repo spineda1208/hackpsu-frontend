@@ -45,26 +45,42 @@ const url = `http://localhost:${port}/api/gemini`;
 (async () => {
     console.log('Testing Gemini notification endpoint...\n');
     
-    for (const test of testPayloads) {
-        console.log(`\n=== ${test.name} ===`);
-        console.log('Payload:', JSON.stringify(test.payload, null, 2));
+    // Get the most recent notification (last in array)
+    let testToSend = testPayloads[testPayloads.length - 1];
+    
+    // Check if it's not a crime
+    const isCrime = testToSend.payload.crimeTypeID !== "No criminal activity detected";
+    
+    if (!isCrime) {
+        console.log('Most recent notification is not a crime. Finding most recent crime...\n');
         
-        try {
-            const res = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(test.payload),
-            });
-
-            const data = await res.json();
-            console.log('Response status:', res.status);
-            console.log('Response body:', JSON.stringify(data, null, 2));
-        } catch (err) {
-            console.error('Failed to POST:', err);
+        // Find the most recent crime (iterate backwards)
+        for (let i = testPayloads.length - 1; i >= 0; i--) {
+            if (testPayloads[i].payload.crimeTypeID !== "No criminal activity detected") {
+                testToSend = testPayloads[i];
+                break;
+            }
         }
     }
     
-    console.log('\n✓ All tests completed');
+    console.log(`\n=== Sending: ${testToSend.name} ===`);
+    console.log('Payload:', JSON.stringify(testToSend.payload, null, 2));
+    
+    try {
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(testToSend.payload),
+        });
+
+        const data = await res.json();
+        console.log('Response status:', res.status);
+        console.log('Response body:', JSON.stringify(data, null, 2));
+    } catch (err) {
+        console.error('Failed to POST:', err);
+    }
+    
+    console.log('\n✓ Notification sent');
     console.log('\n📊 View alerts on the dashboard:');
     console.log(`   http://localhost:${port}/dashboard`);
     console.log('\n💡 Tip: The dashboard auto-refreshes every 10 seconds, or click the refresh button.');
