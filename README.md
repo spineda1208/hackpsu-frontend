@@ -1,3 +1,7 @@
+<div align="center">
+    <img src="https://raw.githubusercontent.com/spineda1208/watchout/main/.github/images/logo.png" width="100rem" height="100rem"/>
+</div>
+
 ## Getting Started
 
 First, run the development server:
