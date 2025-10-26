@@ -215,6 +215,7 @@ export function Sidebar() {
                       isActive && "bg-transparent text-[#F75C69] hover:text-[#F75C69] font-semibold"
                     )}
                     title={collapsed ? item.title : undefined}
+                    tabIndex={-1}
                   >
                     <motion.div
                       className="flex items-center gap-3"

@@ -115,7 +115,7 @@ export default function DashboardPage() {
                   </div>
                   <button
                     onClick={() => copyAlertToClipboard(alert)}
-                    className="flex-shrink-0 p-2 rounded hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-all opacity-0 group-hover:opacity-100 active:scale-95"
+                    className="flex-shrink-0 p-2 rounded hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-all opacity-0 group-hover:opacity-100 active:scale-95 cursor-pointer"
                     title="Copy to clipboard"
                   >
                     <Copy className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
