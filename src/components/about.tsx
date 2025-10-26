@@ -48,16 +48,16 @@ export default function About({
                 {showLink ? (
                   <Link 
                     href={linkHref}
-                    className="p-6 md:p-8 block transition-colors hover:bg-[#F75C69]/5 group"
+                    className="p-6 md:p-8 block transition-colors hover:bg-[#F75C69]/5 focus-visible:bg-[#F75C69]/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F75C69] focus-visible:ring-inset group"
                   >
                     <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
                       {subtitle}
                     </p>
                     
-                    <div className="mt-6 inline-flex items-center gap-2 text-[#F75C69] group-hover:text-[#e54b58] transition-colors">
+                    <div className="mt-6 inline-flex items-center gap-2 text-[#F75C69] group-hover:text-[#e54b58] group-focus-visible:text-[#e54b58] transition-colors">
                       <span className="text-sm md:text-base font-medium">{linkText}</span>
                       <svg 
-                        className="w-5 h-5 md:w-6 md:h-6 transition-all group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:drop-shadow-[0_0_8px_rgba(247,92,105,0.6)]" 
+                        className="w-5 h-5 md:w-6 md:h-6 transition-all group-hover:translate-x-1 group-hover:-translate-y-1 group-focus-visible:translate-x-1 group-focus-visible:-translate-y-1 group-hover:drop-shadow-[0_0_8px_rgba(247,92,105,0.6)] group-focus-visible:drop-shadow-[0_0_8px_rgba(247,92,105,0.6)]" 
                         fill="none" 
                         viewBox="0 0 24 24" 
                         stroke="currentColor"
@@ -86,12 +86,12 @@ export default function About({
                 {showLink ? (
                   <Link 
                     href={linkHref}
-                    className="p-6 md:p-8 min-h-[280px] md:min-h-[320px] flex flex-col justify-end relative transition-colors hover:bg-[#F75C69]/5 group"
+                    className="p-6 md:p-8 min-h-[280px] md:min-h-[320px] flex flex-col justify-end relative transition-colors hover:bg-[#F75C69]/5 focus-visible:bg-[#F75C69]/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F75C69] focus-visible:ring-inset group"
                   >
                     {/* Arrow in top right */}
                     <div className="absolute top-6 md:top-8 right-6 md:right-8">
                       <svg 
-                        className="w-5 h-5 md:w-6 md:h-6 text-[#F75C69] group-hover:text-[#e54b58] transition-all group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:drop-shadow-[0_0_8px_rgba(247,92,105,0.6)]" 
+                        className="w-5 h-5 md:w-6 md:h-6 text-[#F75C69] group-hover:text-[#e54b58] group-focus-visible:text-[#e54b58] transition-all group-hover:translate-x-1 group-hover:-translate-y-1 group-focus-visible:translate-x-1 group-focus-visible:-translate-y-1 group-hover:drop-shadow-[0_0_8px_rgba(247,92,105,0.6)] group-focus-visible:drop-shadow-[0_0_8px_rgba(247,92,105,0.6)]" 
                         fill="none" 
                         viewBox="0 0 24 24" 
                         stroke="currentColor"

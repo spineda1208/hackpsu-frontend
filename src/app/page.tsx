@@ -3,8 +3,6 @@ import Hero from "@/components/hero";
 import About from "@/components/about";
 import FAQ from "@/components/faq";
 import Footer from "@/components/footer";
-import PhoneModel from "@/components/phone-model";
-import LaptopModel from "@/components/laptop-model";
 
 export default function Home() {
   return (
@@ -28,7 +26,6 @@ export default function Home() {
           linkHref="#features"
           id="features"
           reverse={true}
-          customModel={<PhoneModel />}
         />
 
         {/* Technology Section */}
@@ -40,7 +37,6 @@ export default function Home() {
           linkHref="#technology"
           id="technology"
           reverse={false}
-          customModel={<LaptopModel />}
         />
       </div>
 
