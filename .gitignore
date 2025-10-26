@@ -43,3 +43,9 @@ next-env.d.ts
 # cursor
 .cursor/
 AGENTS.md
+
+# Ignore timestamped history files (examples: route_20251026000128.ts, .gitignore_20251026000128)
+# Matches any filename that contains an underscore followed by a numeric timestamp (at least 8 digits).
+# This covers both normal files and dotfiles.
+**/*_[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]*
+**/.*_[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]*
