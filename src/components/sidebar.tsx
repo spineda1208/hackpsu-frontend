@@ -6,6 +6,15 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   LayoutDashboard,
   Video,
@@ -14,9 +23,13 @@ import {
   BarChart3,
   PanelLeft,
   PanelLeftClose,
+  LogOut,
+  User,
 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { useAuth } from "@/contexts/auth-context";
+import { authClient } from "@/lib/auth-client";
 
 interface NavItem {
   title: string;
@@ -55,6 +68,18 @@ const navItems: NavItem[] = [
 export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const { user, fullName, email, avatar } = useAuth();
+
+  const handleLogout = async () => {
+    await authClient.signOut();
+  };
+
+  const getInitials = () => {
+    if (!fullName) return "U";
+    const parts = fullName.trim().split(" ");
+    if (parts.length === 1) return parts[0][0].toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
 
   return (
     <motion.div
@@ -195,13 +220,12 @@ export function Sidebar() {
 
       <Separator />
 
-      {/* Footer */}
+      {/* User Card Footer */}
       <div className="p-4">
         <AnimatePresence mode="wait">
           {!collapsed ? (
             <motion.div
-              key="help-text"
-              className="rounded-lg bg-muted p-3"
+              key="user-card"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
@@ -211,14 +235,51 @@ export function Sidebar() {
                 duration: 0.3,
               }}
             >
-              <p className="text-xs font-medium">Need help?</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Check our documentation
-              </p>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-3 h-auto p-3 hover:bg-muted"
+                  >
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage src={avatar || undefined} alt={fullName || "User"} />
+                      <AvatarFallback className="bg-primary text-primary-foreground">
+                        {getInitials()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col items-start text-left flex-1 min-w-0">
+                      <p className="text-sm font-medium leading-none truncate w-full">
+                        {fullName || "User"}
+                      </p>
+                      <p className="text-xs text-muted-foreground truncate w-full mt-1">
+                        {email || ""}
+                      </p>
+                    </div>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" side="top" className="w-56">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard/settings" className="cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    onClick={handleLogout}
+                    className="text-destructive focus:text-destructive cursor-pointer"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </motion.div>
           ) : (
             <motion.div
-              key="help-icon"
+              key="user-avatar"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
@@ -228,9 +289,43 @@ export function Sidebar() {
                 duration: 0.3,
               }}
             >
-              <Button variant="ghost" size="icon" className="w-full">
-                <Settings className="h-4 w-4" />
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="w-full h-12">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={avatar || undefined} alt={fullName || "User"} />
+                      <AvatarFallback className="bg-primary text-primary-foreground">
+                        {getInitials()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" side="top" className="w-56">
+                  <DropdownMenuLabel>
+                    <div className="flex flex-col">
+                      <p className="text-sm font-medium">{fullName || "User"}</p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {email || ""}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard/settings" className="cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    onClick={handleLogout}
+                    className="text-destructive focus:text-destructive cursor-pointer"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </motion.div>
           )}
         </AnimatePresence>
