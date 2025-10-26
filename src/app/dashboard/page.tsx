@@ -11,10 +11,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">
-          Welcome back! Here&apos;s an overview of your system.
-        </p>
+        <h1 className="text-4xl font-bold tracking-tight text-black dark:text-white">Dashboard</h1>
       </div>
 
       {/* Stats Grid */}

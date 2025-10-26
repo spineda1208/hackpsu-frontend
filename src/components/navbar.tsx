@@ -51,8 +51,11 @@ export default function Toolbar() {
         >
           FAQ
         </a>
-        <a href="/dashboard" className="hover:text-[#F75C69] transition-colors pointer-events-auto">
-          Dashboard
+        <a 
+          href="/signin" 
+          className="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition-colors pointer-events-auto"
+        >
+          Sign In
         </a>
       </div>
     </motion.nav>
