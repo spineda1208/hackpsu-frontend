@@ -13,6 +13,16 @@ export default function Toolbar() {
     }
   };
 
+  const handleSectionClick = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
+    if (pathname === '/') {
+      e.preventDefault();
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <motion.nav
       initial={{ y: -100, opacity: 0 }}
@@ -27,10 +37,18 @@ export default function Toolbar() {
         >
           Home
         </a>
-        <a href="#about" className="hover:text-[#F75C69] transition-colors pointer-events-auto">
+        <a 
+          href="#about" 
+          onClick={(e) => handleSectionClick(e, 'about')}
+          className="hover:text-[#F75C69] transition-colors pointer-events-auto"
+        >
           About
         </a>
-        <a href="#faq" className="hover:text-[#F75C69] transition-colors pointer-events-auto">
+        <a 
+          href="#faq" 
+          onClick={(e) => handleSectionClick(e, 'faq')}
+          className="hover:text-[#F75C69] transition-colors pointer-events-auto"
+        >
           FAQ
         </a>
         <a href="/dashboard" className="hover:text-[#F75C69] transition-colors pointer-events-auto">
