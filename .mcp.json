@@ -7,6 +7,9 @@
     "motion": {
       "command": "bunx",
       "args": ["-y", "motion-ai"]
+    },
+    "Better Auth": {
+      "url": "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp"
     }
   }
 }
