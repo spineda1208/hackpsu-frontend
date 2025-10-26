@@ -39,7 +39,7 @@ export default function DashboardLayout({
 
   return (
     <>
-      <Toaster position="top-right" richColors />
+      <Toaster position="bottom-center" richColors />
       <div className="flex h-screen overflow-hidden bg-white dark:bg-zinc-950">
         <Sidebar />
         <main className="flex-1 w-full md:w-auto overflow-y-auto bg-zinc-50 dark:bg-black">
