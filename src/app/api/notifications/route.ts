@@ -16,27 +16,41 @@ const CRIME_TYPE_MAP: Record<number, string> = {
     10: 'Shoplifting',
     11: 'Stealing',
     12: 'Vandalism',
+    13: 'Normal',
 };
 
 /**
  * POST handler for sending email notifications to multiple users when a crime is detected.
  * Expects body: { crimeTypeId: number, emails: string[] }
+ * TODO: Write endpoint for Gemini that takes in JSON and gets/returns crime type
+ *       Modify to include a report feature that returns string of 2-3 paragraph report of around 1000-2000 characters max 
+ *       Ensure that emails registered from db/schema/auth.ts are used as recipients of the notifications
  */
+import { db } from '@/db/client';
+import { user } from '@/db/schema/auth';
+
 export async function POST(request: NextRequest) {
     try {
-        const { crimeTypeId, emails } = await request.json();
+        const { crimeTypeId } = await request.json();
 
         // Validate input
-        if (!crimeTypeId || !Array.isArray(emails) || emails.length === 0) {
+        if (typeof crimeTypeId !== 'number') {
             return NextResponse.json(
-                { error: 'crimeTypeId and emails[] are required' },
+                { error: 'crimeTypeId (number) is required' },
                 { status: 400 }
             );
         }
 
+        // Fetch all registered user emails
+        const users = await db.select({ email: user.email }).from(user);
+        const emails = users.map(u => u.email).filter(Boolean);
+        if (emails.length === 0) {
+            return NextResponse.json({ error: 'No registered emails found' }, { status: 404 });
+        }
+
         // Resolve crime type from the map
         const crimeType = CRIME_TYPE_MAP[crimeTypeId] || 'Unknown Crime';
-        
+
         // Send email to each recipient
         const results = await Promise.all(
             emails.map((to: string) => sendEmailNotification({ 
@@ -45,9 +59,9 @@ export async function POST(request: NextRequest) {
             }))
         );
 
-            const failed = results
-                .map((res: { success: boolean; error?: string }, i: number) => ({ index: i, result: res }))
-                .filter((r) => !r.result.success);
+        const failed = results
+            .map((res: { success: boolean; error?: string }, i: number) => ({ index: i, result: res }))
+            .filter((r) => !r.result.success);
         if (failed.length > 0) {
             return NextResponse.json({ error: 'Some emails failed', details: failed }, { status: 207 });
         }
