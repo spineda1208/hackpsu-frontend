@@ -11,13 +11,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
   LayoutDashboard,
-  Video,
+  Settings,
   PanelLeft,
   PanelLeftClose,
   LogOut,
@@ -46,9 +44,9 @@ const navItems: NavItem[] = [
     icon: LayoutDashboard,
   },
   {
-    title: "Video Feeds",
-    href: "/dashboard/video-feeds",
-    icon: Video,
+    title: "Settings",
+    href: "/dashboard/settings",
+    icon: Settings,
   },
 ];
 
@@ -294,11 +292,9 @@ export function Sidebar() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" side="top" className="w-56 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800">
-                  <DropdownMenuLabel className="text-black dark:text-white">My Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-zinc-200 dark:bg-zinc-800" />
                   <DropdownMenuItem 
                     onClick={handleLogout}
-                    className="text-[#F75C69] focus:text-[#F75C69] focus:bg-zinc-100 dark:focus:bg-zinc-800 cursor-pointer"
+                    className="text-[#F75C69] focus:text-[#F75C69] focus:bg-zinc-100 dark:focus:bg-zinc-800 cursor-pointer justify-center"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
@@ -330,18 +326,9 @@ export function Sidebar() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" side="top" className="w-56 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800">
-                  <DropdownMenuLabel className="text-black dark:text-white">
-                    <div className="flex flex-col">
-                      <p className="text-sm font-medium">{fullName || "User"}</p>
-                      <p className="text-xs text-zinc-600 dark:text-zinc-400 truncate">
-                        {email || ""}
-                      </p>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-zinc-200 dark:bg-zinc-800" />
                   <DropdownMenuItem 
                     onClick={handleLogout}
-                    className="text-[#F75C69] focus:text-[#F75C69] focus:bg-zinc-100 dark:focus:bg-zinc-800 cursor-pointer"
+                    className="text-[#F75C69] focus:text-[#F75C69] focus:bg-zinc-100 dark:focus:bg-zinc-800 cursor-pointer justify-center"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
