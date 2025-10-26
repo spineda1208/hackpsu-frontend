@@ -9,29 +9,29 @@ export default function Footer() {
               { 
                 section: 'Product', 
                 links: [
-                  { label: 'Features', href: '#features' },
-                  { label: 'Pricing', href: '#pricing' }
+                  { label: 'Features', href: '/announcement' },
+                  { label: 'Pricing', href: '/announcement' }
                 ]
               },
               { 
                 section: 'Company', 
                 links: [
-                  { label: 'About', href: '#about' },
-                  { label: 'Team', href: '#team' }
+                  { label: 'About', href: '/announcement' },
+                  { label: 'Team', href: '/announcement' }
                 ]
               },
               { 
                 section: 'Resources', 
                 links: [
-                  { label: 'Docs', href: '#docs' },
-                  { label: 'Support', href: '#support' }
+                  { label: 'Docs', href: '/announcement' },
+                  { label: 'Support', href: '/announcement' }
                 ]
               },
               { 
                 section: 'Legal', 
                 links: [
-                  { label: 'Privacy', href: '#privacy' },
-                  { label: 'Terms', href: '#terms' }
+                  { label: 'Privacy', href: '/announcement' },
+                  { label: 'Terms', href: '/announcement' }
                 ]
               }
             ].map(({ section, links }) => (
