@@ -55,7 +55,7 @@ export default function Toolbar() {
         </a>
         <a 
           href={isAuthenticated ? "/dashboard" : "/signin"}
-          className="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition-colors pointer-events-auto"
+          className="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition-colors pointer-events-auto whitespace-nowrap"
         >
           {isAuthenticated ? "Dashboard" : "Sign In"}
         </a>
