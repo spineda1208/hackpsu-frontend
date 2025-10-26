@@ -232,10 +232,7 @@ export default function VideoFeedsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Video Feeds</h1>
-          <p className="text-muted-foreground">
-            Monitor all your camera feeds in real-time
-          </p>
+          <h1 className="text-4xl font-bold tracking-tight text-black dark:text-white">Video Feeds</h1>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline">Filter</Button>

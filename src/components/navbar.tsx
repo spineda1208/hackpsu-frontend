@@ -2,9 +2,11 @@
 
 import { motion } from "motion/react";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/lib/auth-utils";
 
 export default function Toolbar() {
   const pathname = usePathname();
+  const { isAuthenticated } = useAuth();
 
   const handleHomeClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (pathname === '/') {
@@ -52,10 +54,10 @@ export default function Toolbar() {
           FAQ
         </a>
         <a 
-          href="/signin" 
+          href={isAuthenticated ? "/dashboard" : "/signin"}
           className="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition-colors pointer-events-auto"
         >
-          Sign In
+          {isAuthenticated ? "Dashboard" : "Sign In"}
         </a>
       </div>
     </motion.nav>

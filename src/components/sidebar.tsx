@@ -171,7 +171,7 @@ export function Sidebar() {
                   duration: 0.3,
                 }}
               >
-                <PanelLeftClose className="h-4 w-4" />
+                <PanelLeft className="h-4 w-4" />
               </motion.div>
             ) : (
               <motion.div

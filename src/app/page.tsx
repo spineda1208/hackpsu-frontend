@@ -1,40 +1,9 @@
-"use client";
-
 import Navbar from "@/components/navbar";
 import Hero from "@/components/hero";
 import FAQ from "@/components/faq";
 import Footer from "@/components/footer";
-import { useAuth } from "@/lib/auth-utils";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export default function Home() {
-  const { isAuthenticated, isLoading } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isLoading && isAuthenticated) {
-      router.push("/dashboard");
-    }
-  }, [isAuthenticated, isLoading, router]);
-
-  // Show loading state while checking authentication
-  if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-zinc-50 dark:bg-black">
-        <div className="flex flex-col items-center gap-4">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-          <p className="text-sm text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Don't render home page if authenticated (will redirect to dashboard)
-  if (isAuthenticated) {
-    return null;
-  }
-
   return (
     <div className="flex flex-col items-center bg-zinc-50 font-sans dark:bg-black">
       <Navbar />
