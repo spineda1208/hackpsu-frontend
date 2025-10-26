@@ -25,6 +25,9 @@ export interface EmailJSPayload {
 export async function sendEmailViaEmailJS(payload: EmailJSPayload) {
     const { to, crimeType, templateParams = {} } = payload;
 
+    // Default message if no summary provided
+    const defaultMessage = `A crime has been detected in your area: ${crimeType}. Please refer to local authorities for more information.`;
+    
     // This matches EmailJS API requirements exactly
     const body = {
         service_id: process.env.EMAILJS_SERVICE_ID,
@@ -34,7 +37,8 @@ export async function sendEmailViaEmailJS(payload: EmailJSPayload) {
         template_params: {
         to: to, // EmailJS expects 'to' not 'to_email'
         time: new Date().toLocaleString(),
-        message: `A crime has been detected in your area: ${crimeType}. Please refer to local authorities for more information.`,
+        crime_type: crimeType,
+        message: templateParams.summary || defaultMessage,
         ...templateParams,
         },
     };
