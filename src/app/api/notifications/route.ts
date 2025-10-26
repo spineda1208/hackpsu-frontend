@@ -34,15 +34,16 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Resolve crime type and compose subject/message
+        // Resolve crime type from the map
         const crimeType = CRIME_TYPE_MAP[crimeTypeId] || 'Unknown Crime';
-        const subject = `Crime detected: ${crimeType}`;
-        const message = `A ${crimeType} has been detected nearby. Please check your dashboard for details and contact local authorities if necessary.`;
-
+        
         // Send email to each recipient
-            const results = await Promise.all(
-                emails.map((to: string) => sendEmailNotification({ to, subject, message }))
-            );
+        const results = await Promise.all(
+            emails.map((to: string) => sendEmailNotification({ 
+                to,
+                crimeType
+            }))
+        );
 
             const failed = results
                 .map((res: { success: boolean; error?: string }, i: number) => ({ index: i, result: res }))

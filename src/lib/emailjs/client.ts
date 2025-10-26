@@ -10,38 +10,46 @@ if (!process.env.EMAILJS_TEMPLATE_ID) {
 if (!process.env.EMAILJS_USER_ID) {
   throw new Error('Missing EMAILJS_USER_ID environment variable');
 }
+if (!process.env.EMAILJS_PRIVATE_KEY) {
+  throw new Error('Missing EMAILJS_PRIVATE_KEY environment variable');
+}
 
 const EMAILJS_API = 'https://api.emailjs.com/api/v1.0/email/send';
 
 export interface EmailJSPayload {
   to: string;
-  subject: string;
-  message: string;
+  crimeType: string;
   templateParams?: Record<string, unknown>;
 }
 
 export async function sendEmailViaEmailJS(payload: EmailJSPayload) {
-  const { to, subject, message, templateParams = {} } = payload;
+  const { to, crimeType, templateParams = {} } = payload;
 
+  // This matches EmailJS API requirements exactly
   const body = {
     service_id: process.env.EMAILJS_SERVICE_ID,
     template_id: process.env.EMAILJS_TEMPLATE_ID,
     user_id: process.env.EMAILJS_USER_ID,
+    accessToken: process.env.EMAILJS_PRIVATE_KEY,
     template_params: {
-      to_email: to,
-      subject,
-      message,
+      to: to, // EmailJS expects 'to' not 'to_email'
+      time: new Date().toLocaleString(),
+      message: `A crime has been detected in your area: ${crimeType}. Please refer to local authorities for more information.`,
       ...templateParams,
     },
   };
 
+  // Make the POST request to EmailJS API
   try {
     const res = await fetch(EMAILJS_API, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(body),
     });
 
+    // Handle non-200 responses
     if (!res.ok) {
       const text = await res.text();
       return { success: false, status: res.status, error: text };
