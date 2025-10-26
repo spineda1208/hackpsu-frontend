@@ -8,6 +8,13 @@
       "when": 1761436854205,
       "tag": "0000_vengeful_raider",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1761449231502,
+      "tag": "0001_wet_the_watchers",
+      "breakpoints": true
     }
   ]
 }
