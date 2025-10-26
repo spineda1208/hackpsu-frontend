@@ -27,11 +27,11 @@ export interface AuthContextValue {
   // User data
   user: User | null;
   session: Session | null;
-  
+
   // Computed properties
   isAuthenticated: boolean;
   isLoading: boolean;
-  
+
   // Helper getters for common user properties
   firstName: string | null;
   lastName: string | null;
@@ -69,18 +69,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [sessionData, isPending]);
 
   return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 }
 
 export function useAuth(): AuthContextValue {
   const context = useContext(AuthContext);
-  
+
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
-  
+
   return context;
 }
