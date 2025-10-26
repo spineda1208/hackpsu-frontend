@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:17
+    container_name: watchout-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: watchout
+    volumes:
+      - ./drizzle/setup_roles.sql:/docker-entrypoint-initdb.d/setup_roles.sql
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  pgdata:
