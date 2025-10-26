@@ -4,6 +4,7 @@ import { Sidebar } from "@/components/sidebar";
 import { useAuth } from "@/lib/auth-utils";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { Toaster } from "sonner";
 
 export default function DashboardLayout({
   children,
@@ -37,11 +38,14 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <Sidebar />
-      <main className="flex-1 overflow-y-auto">
-        <div className="container py-6 px-8">{children}</div>
-      </main>
-    </div>
+    <>
+      <Toaster position="bottom-center" richColors />
+      <div className="flex h-screen overflow-hidden bg-white dark:bg-zinc-950">
+        <Sidebar />
+        <main className="flex-1 w-full md:w-auto overflow-y-auto bg-zinc-50 dark:bg-black">
+          <div className="container py-6 px-8 pt-20 md:pt-6">{children}</div>
+        </main>
+      </div>
+    </>
   );
 }
