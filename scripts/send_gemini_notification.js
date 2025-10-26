@@ -19,6 +19,15 @@ const testPayloads = [
         payload: {
             crimeTypeID: "Violence detected",
             Summary: "Physical altercation between three people observed in the parking lot. One person was knocked to the ground during the incident.",
+            emails: ["jaeminbird@gmail.com"]
+        }
+    },
+    {
+        name: "Shoplifting Detection",
+        payload: {
+            crimeTypeID: "Shoplifting detected",
+            Summary: "Individual observed concealing merchandise in a bag and attempting to exit without payment.",
+            emails: ["jaeminbird@gmail.com"]
         }
     },
     {
@@ -56,5 +65,8 @@ const url = `http://localhost:${port}/api/gemini`;
     }
     
     console.log('\n✓ All tests completed');
+    console.log('\n📊 View alerts on the dashboard:');
+    console.log(`   http://localhost:${port}/dashboard`);
+    console.log('\n💡 Tip: The dashboard auto-refreshes every 10 seconds, or click the refresh button.');
 })();
 

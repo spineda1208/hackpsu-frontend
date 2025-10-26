@@ -1,11 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendEmailViaEmailJS } from '@/lib/emailjs/client';
 import { getGeminiCrimeTypeName, shouldNotify } from '@/lib/emailjs/crime-types';
+import { addAlert, getAlerts } from '@/lib/alerts/store';
 
 interface GeminiPayload {
     crimeTypeID: string;
     Summary: string;
     emails?: string[]; // Optional: specific emails to notify
+}
+
+export async function GET(request: NextRequest) {
+    try {
+        const searchParams = request.nextUrl.searchParams;
+        const limit = parseInt(searchParams.get('limit') || '20');
+        
+        const alerts = getAlerts(limit);
+        
+        return NextResponse.json({
+            success: true,
+            count: alerts.length,
+            alerts,
+        });
+    } catch (error) {
+        console.error('Error in GET /api/gemini:', error);
+        return NextResponse.json(
+            { 
+                success: false, 
+                error: error instanceof Error ? error.message : 'Unknown error' 
+            },
+            { status: 500 }
+        );
+    }
 }
 
 export async function POST(request: NextRequest) {
@@ -68,12 +93,24 @@ export async function POST(request: NextRequest) {
 
         // Check if all emails were sent successfully
         const allSuccess = results.every(r => r.success);
+        const successCount = results.filter(r => r.success).length;
+
+        // Store the alert for dashboard display
+        const severity = crimeTypeID.includes('Violence') || crimeTypeID.includes('Arson') ? 'error' : 'warning';
+        const alert = addAlert({
+            crimeTypeID,
+            crimeType,
+            summary: Summary || `${crimeType} detected`,
+            severity,
+            notificationsSent: successCount,
+        });
 
         return NextResponse.json({
             success: allSuccess,
             crimeTypeID,
             crimeType,
-            notificationsSent: results.filter(r => r.success).length,
+            notificationsSent: successCount,
+            alertId: alert.id,
             results,
         }, { 
             status: allSuccess ? 200 : 207 // 207 Multi-Status if some failed
