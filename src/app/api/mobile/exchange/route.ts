@@ -70,7 +70,12 @@ async function fetchGitHubProfile(accessToken: string) {
 }
 
 // Link or create user and account
-async function linkOrCreateUser(providerId: "google" | "github", accountId: string, profile: { email?: string | null; name?: string | null; image?: string | null }) {
+async function linkOrCreateUser(
+  providerId: "google" | "github",
+  accountId: string,
+  profile: { email?: string | null; name?: string | null; image?: string | null },
+  requestId?: string
+) {
   // Find existing account
   const existingAccount = await db.query.account.findFirst({
     where: (fields, { and, eq }) => and(eq(fields.providerId, providerId), eq(fields.accountId, accountId)),
@@ -79,6 +84,15 @@ async function linkOrCreateUser(providerId: "google" | "github", accountId: stri
   if (existingAccount) {
     const existingUser = await db.query.user.findFirst({ where: (f, { eq }) => eq(f.id, existingAccount.userId) });
     if (!existingUser) throw new Error("Orphaned account without user");
+    console.log(
+      JSON.stringify({
+        event: "mobile_exchange.account_exists",
+        requestId,
+        providerId,
+        accountId,
+        userId: existingUser.id,
+      })
+    );
     return existingUser;
   }
 
@@ -86,6 +100,16 @@ async function linkOrCreateUser(providerId: "google" | "github", accountId: stri
   let existingUserByEmail = null as null | { id: string; email: string; name: string | null; image: string | null; emailVerified: boolean; createdAt: Date; updatedAt: Date };
   if (profile.email) {
     existingUserByEmail = await db.query.user.findFirst({ where: (f, { eq }) => eq(f.email, profile.email!.toLowerCase()) });
+    if (existingUserByEmail) {
+      console.log(
+        JSON.stringify({
+          event: "mobile_exchange.user_by_email_found",
+          requestId,
+          email: profile.email?.toLowerCase(),
+          userId: existingUserByEmail.id,
+        })
+      );
+    }
   }
 
   const userId = existingUserByEmail?.id ?? randomUUID();
@@ -97,6 +121,14 @@ async function linkOrCreateUser(providerId: "google" | "github", accountId: stri
       image: profile.image ?? null,
       emailVerified: Boolean(profile.email),
     });
+    console.log(
+      JSON.stringify({
+        event: "mobile_exchange.user_created",
+        requestId,
+        userId,
+        providerId,
+      })
+    );
   }
 
   // Link account
@@ -111,6 +143,15 @@ async function linkOrCreateUser(providerId: "google" | "github", accountId: stri
     scope: null,
     password: null,
   });
+  console.log(
+    JSON.stringify({
+      event: "mobile_exchange.account_linked",
+      requestId,
+      providerId,
+      accountId,
+      userId,
+    })
+  );
 
   const createdUser = await db.query.user.findFirst({ where: (f, { eq }) => eq(f.id, userId) });
   if (!createdUser) throw new Error("Failed to create user");
@@ -130,8 +171,17 @@ async function createBetterAuthSession(userId: string) {
 
 export async function POST(req: Request) {
   try {
+    const requestId = randomUUID();
     const body = await req.json();
     const { provider, token } = ExchangeSchema.parse(body);
+    console.log(
+      JSON.stringify({
+        event: "mobile_exchange.received",
+        requestId,
+        provider,
+        userAgent: req.headers.get("user-agent") ?? null,
+      })
+    );
 
     let email: string | null = null;
     let name: string | null = null;
@@ -142,6 +192,9 @@ export async function POST(req: Request) {
       // Try ID token first
       let sub: string | undefined;
       try {
+        console.log(
+          JSON.stringify({ event: "mobile_exchange.google_verify_id_token_attempt", requestId })
+        );
         const payload = await verifyGoogleIdToken(token);
         sub = payload.sub;
         email = (payload.email ?? null) as string | null;
@@ -149,6 +202,9 @@ export async function POST(req: Request) {
         image = (payload.picture ?? null) as string | null;
       } catch {
         // Fallback: treat token as access token
+        console.log(
+          JSON.stringify({ event: "mobile_exchange.google_userinfo_attempt", requestId })
+        );
         const info = await fetchGoogleProfileFromAccessToken(token);
         sub = (info.sub ?? info.id) as string | undefined;
         email = (info.email ?? null) as string | null;
@@ -159,6 +215,9 @@ export async function POST(req: Request) {
       accountId = sub;
     } else {
       // GitHub: access token
+      console.log(
+        JSON.stringify({ event: "mobile_exchange.github_userinfo_attempt", requestId })
+      );
       const g = await fetchGitHubProfile(token);
       accountId = g.id;
       email = (g.email ?? null) as string | null;
@@ -166,14 +225,25 @@ export async function POST(req: Request) {
       image = (g.avatar_url ?? null) as string | null;
     }
 
-    const user = await linkOrCreateUser(provider, accountId, { email, name, image });
+    const user = await linkOrCreateUser(provider, accountId, { email, name, image }, requestId);
     const sessionToken = await createBetterAuthSession(user.id);
+    console.log(
+      JSON.stringify({ event: "mobile_exchange.session_created", requestId, userId: user.id })
+    );
 
     return NextResponse.json({
       token: sessionToken,
       user: { id: user.id, email: user.email, name: user.name, avatarUrl: user.image ?? null },
     });
   } catch (e: any) {
+    const isDev = process.env.NODE_ENV !== "production";
+    console.error(
+      JSON.stringify({
+        event: "mobile_exchange.error",
+        message: e?.message ?? "Invalid request",
+        stack: isDev ? e?.stack : undefined,
+      })
+    );
     return NextResponse.json({ message: e?.message ?? "Invalid request" }, { status: 400 });
   }
 }
