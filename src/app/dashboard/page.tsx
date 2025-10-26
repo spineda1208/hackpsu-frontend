@@ -6,18 +6,69 @@ import {
   Card,
   CardContent,
 } from "@/components/ui/card";
-import { AlertTriangle, X, Maximize2, Copy } from "lucide-react";
+import { AlertTriangle, X, Maximize2, Copy, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+
+interface Alert {
+  id: string;
+  crimeTypeID: string;
+  crimeType: string;
+  summary: string;
+  timestamp: string;
+  severity: 'warning' | 'error';
+  notificationsSent: number;
+}
 
 export default function DashboardPage() {
   const [fullscreenVideo, setFullscreenVideo] = useState<number | null>(null);
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  // Sample alerts data
-  const alerts = [
-    { id: 1, time: "2 minutes ago", message: "Motion detected in Camera 3", severity: "warning" },
-    { id: 2, time: "15 minutes ago", message: "Camera 5 offline", severity: "error" },
-    { id: 3, time: "1 hour ago", message: "Unusual activity detected in Camera 1", severity: "warning" },
-  ];
+  // Fetch alerts from API
+  const fetchAlerts = async (showRefreshing = false) => {
+    try {
+      if (showRefreshing) setRefreshing(true);
+      const response = await fetch('/api/gemini?limit=10');
+      const data = await response.json();
+      
+      if (data.success) {
+        setAlerts(data.alerts);
+      }
+    } catch (error) {
+      console.error('Failed to fetch alerts:', error);
+    } finally {
+      setLoading(false);
+      if (showRefreshing) setRefreshing(false);
+    }
+  };
+
+  // Initial fetch
+  useEffect(() => {
+    fetchAlerts();
+    
+    // Poll for new alerts every 10 seconds
+    const interval = setInterval(() => {
+      fetchAlerts();
+    }, 10000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  // Format timestamp as relative time
+  const formatTime = (timestamp: string) => {
+    const now = new Date();
+    const alertTime = new Date(timestamp);
+    const diffMs = now.getTime() - alertTime.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+  };
 
   // Sample video feeds data
   const videoFeeds = [
@@ -50,8 +101,9 @@ export default function DashboardPage() {
     setFullscreenVideo(null);
   };
 
-  const copyAlertToClipboard = async (alert: { id: number; time: string; message: string; severity: string }) => {
-    const text = `${alert.message} - ${alert.time}`;
+  const copyAlertToClipboard = async (alert: Alert) => {
+    const time = formatTime(alert.timestamp);
+    const text = `${alert.crimeType}: ${alert.summary} - ${time}`;
     try {
       await navigator.clipboard.writeText(text);
       toast.success("Alert copied to clipboard!", {
@@ -89,39 +141,59 @@ export default function DashboardPage() {
       >
         <Card className="border-2 border-zinc-200 dark:border-zinc-800">
           <CardContent className="p-0">
-            <h2 className="text-lg font-bold text-black dark:text-white py-4 px-6 border-b border-zinc-200 dark:border-zinc-800">
-              Alerts
-            </h2>
+            <div className="flex items-center justify-between py-4 px-6 border-b border-zinc-200 dark:border-zinc-800">
+              <h2 className="text-lg font-bold text-black dark:text-white">
+                Live Alerts
+              </h2>
+              <button
+                onClick={() => fetchAlerts(true)}
+                disabled={refreshing}
+                className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors disabled:opacity-50"
+                title="Refresh alerts"
+              >
+                <RefreshCw className={`h-4 w-4 text-zinc-600 dark:text-zinc-400 ${refreshing ? 'animate-spin' : ''}`} />
+              </button>
+            </div>
             <div className="divide-y divide-zinc-200 dark:divide-zinc-800 max-h-80 overflow-y-auto">
-              {alerts.map((alert) => (
-                <div
-                  key={alert.id}
-                  className="flex items-center gap-4 py-4 px-6 group hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
-                >
-                  <AlertTriangle
-                    className={`h-5 w-5 flex-shrink-0 ${
-                      alert.severity === "error"
-                        ? "text-red-500"
-                        : "text-yellow-500"
-                    }`}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-black dark:text-white">
-                      {alert.message}
-                    </p>
-                    <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                      {alert.time}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => copyAlertToClipboard(alert)}
-                    className="flex-shrink-0 p-2 rounded hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-all opacity-0 group-hover:opacity-100 active:scale-95 cursor-pointer"
-                    title="Copy to clipboard"
-                  >
-                    <Copy className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
-                  </button>
+              {loading ? (
+                <div className="py-8 text-center text-zinc-500 dark:text-zinc-400">
+                  Loading alerts...
                 </div>
-              ))}
+              ) : alerts.length === 0 ? (
+                <div className="py-8 text-center text-zinc-500 dark:text-zinc-400">
+                  No alerts yet. Alerts will appear here when crimes are detected by the AI system.
+                </div>
+              ) : (
+                alerts.map((alert) => (
+                  <div
+                    key={alert.id}
+                    className="flex items-center gap-4 py-4 px-6 group hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
+                  >
+                    <AlertTriangle
+                      className={`h-5 w-5 flex-shrink-0 ${
+                        alert.severity === "error"
+                          ? "text-red-500"
+                          : "text-yellow-500"
+                      }`}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-black dark:text-white">
+                        {alert.crimeType}: {alert.summary}
+                      </p>
+                      <p className="text-xs text-zinc-600 dark:text-zinc-400">
+                        {formatTime(alert.timestamp)} • {alert.notificationsSent} notification{alert.notificationsSent !== 1 ? 's' : ''} sent
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => copyAlertToClipboard(alert)}
+                      className="flex-shrink-0 p-2 rounded hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-all opacity-0 group-hover:opacity-100 active:scale-95 cursor-pointer"
+                      title="Copy to clipboard"
+                    >
+                      <Copy className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
+                    </button>
+                  </div>
+                ))
+              )}
             </div>
           </CardContent>
         </Card>
