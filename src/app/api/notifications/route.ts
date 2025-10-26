@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sendSMSNotification } from '@/lib/twilio/notifications';
+import { sendEmailNotification } from '@/lib/notifications/email';
 
-
-// Map of crime type IDs to readable crime names
+// Map of crime type IDs to human-readable crime names
 const CRIME_TYPE_MAP: Record<number, string> = {
     0: 'Abuse',
     1: 'Arrest',
@@ -16,49 +15,45 @@ const CRIME_TYPE_MAP: Record<number, string> = {
     9: 'Shooting',
     10: 'Shoplifting',
     11: 'Stealing',
-    12: 'Vandalism'
+    12: 'Vandalism',
 };
 
 /**
- * POST handler for sending SMS notifications to multiple users when a crime is detected.
- * Expects a JSON body: { crimeTypeId: number, phoneNumbers: string[] }
+ * POST handler for sending email notifications to multiple users when a crime is detected.
+ * Expects body: { crimeTypeId: number, emails: string[] }
  */
 export async function POST(request: NextRequest) {
     try {
-        const { crimeTypeId, phoneNumbers } = await request.json();
+        const { crimeTypeId, emails } = await request.json();
 
         // Validate input
-        if (!crimeTypeId || !Array.isArray(phoneNumbers) || phoneNumbers.length === 0) {
+        if (!crimeTypeId || !Array.isArray(emails) || emails.length === 0) {
             return NextResponse.json(
-                { error: 'crimeTypeId and phoneNumbers[] are required' },
+                { error: 'crimeTypeId and emails[] are required' },
                 { status: 400 }
             );
         }
 
-        // Get the crime type name from the map, fallback to 'Unknown Crime'
+        // Resolve crime type and compose subject/message
         const crimeType = CRIME_TYPE_MAP[crimeTypeId] || 'Unknown Crime';
-        const message = `Crime detected nearby: ${crimeType}. Refer to local authorities for more information.`;
+        const subject = `Crime detected: ${crimeType}`;
+        const message = `A ${crimeType} has been detected nearby. Please check your dashboard for details and contact local authorities if necessary.`;
 
-        // Send SMS to each phone number and collect results
-        const results = await Promise.all(
-            phoneNumbers.map((to) => sendSMSNotification({ to, body: message }))
-        );
-
-        // Check if any failed
-        const failed = results.filter((r) => !r.success);
-        if (failed.length > 0) {
-            return NextResponse.json(
-                { error: 'Some notifications failed', details: failed },
-                { status: 207 } // 207: Multi-Status
+        // Send email to each recipient
+            const results = await Promise.all(
+                emails.map((to: string) => sendEmailNotification({ to, subject, message }))
             );
+
+            const failed = results
+                .map((res: { success: boolean; error?: string }, i: number) => ({ index: i, result: res }))
+                .filter((r) => !r.result.success);
+        if (failed.length > 0) {
+            return NextResponse.json({ error: 'Some emails failed', details: failed }, { status: 207 });
         }
 
-        return NextResponse.json({ success: true, message: 'Notifications sent.' });
-    } catch (error) {
-        console.error('Error sending notifications:', error);
-        return NextResponse.json(
-            { error: 'Failed to send notifications' },
-            { status: 500 }
-        );
+        return NextResponse.json({ success: true, message: 'Emails queued/sent' });
+    } catch (err) {
+        console.error('Error in notifications POST:', err);
+        return NextResponse.json({ error: 'Invalid request or server error' }, { status: 400 });
     }
 }
